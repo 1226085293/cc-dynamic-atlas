@@ -1,0 +1,44 @@
+<div class="panel_config">
+	<!-- 挂载定位方式 -->
+	<ui-prop style="margin: 5px">
+		<ui-label slot="label">挂载定位方式</ui-label>
+		<ui-select
+			v-bind:value="mount_position_type"
+			@confirm="mount_position_type = Number($event.target.value)"
+			slot="content"
+		>
+			<option v-bind:value="config_mount_position_type.base">固定基类</option>
+			<option v-bind:value="config_mount_position_type.mark">生成标记</option>
+		</ui-select>
+	</ui-prop>
+
+	<!-- 挂载组件基类 -->
+	<ui-prop style="margin: 5px" v-show="mount_position_type === config_mount_position_type.base">
+		<ui-label slot="label">挂载组件基类</ui-label>
+		<ui-input
+			v-bind:value="mount_comp_base"
+			@confirm="mount_comp_base = $event.target.value"
+			slot="content"
+		></ui-input>
+	</ui-prop>
+
+	<!-- 挂载组件标记 -->
+	<ui-prop style="margin: 5px" v-show="mount_position_type === config_mount_position_type.mark">
+		<ui-label slot="label">挂载组件标记</ui-label>
+		<ui-input
+			v-bind:value="mount_comp_mark"
+			@confirm="mount_comp_mark = $event.target.value"
+			slot="content"
+		></ui-input>
+	</ui-prop>
+
+	<!-- 脚本名后缀（独立脚本名后缀） -->
+	<ui-prop style="margin: 5px">
+		<ui-label slot="label">脚本名后缀</ui-label>
+		<ui-input
+			v-bind:value="script_end_s"
+			slot="content"
+			@confirm="script_end_s = $event.target.value"
+		></ui-input>
+	</ui-prop>
+</div>
