@@ -17,8 +17,9 @@ export class main extends Component {
 		projectDynamicAtlasManager.enabled = true;
 
 		this.nodes.list
-			.getComponent(cc.ScrollView)
-			.content.getComponentsInChildren(cc.UIRenderer)
+			// .getComponent(cc.ScrollView)
+			// .content
+			.getComponentsInChildren(cc.UIRenderer)
 			.forEach((v) => {
 				if (v["spriteFrame"]) {
 					projectDynamicAtlasManager.packToDynamicAtlas(v, v["spriteFrame"]);

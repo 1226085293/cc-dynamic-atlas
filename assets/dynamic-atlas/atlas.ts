@@ -259,8 +259,8 @@ export class DynamicAtlasTexture extends cc.Texture2D {
 		const region = new cc.gfx.BufferTextureCopy();
 		region.texOffset.x = x;
 		region.texOffset.y = y;
-		region.texExtent.width = image.width;
-		region.texExtent.height = image.height;
+		region.texExtent.width = (image as any)._nativeData?.width ?? (image as any)._width;
+		region.texExtent.height = (image as any)._nativeData?.height ?? (image as any)._height;
 		gfxDevice.copyTexImagesToTexture([image.data as HTMLCanvasElement], gfxTexture, [region]);
 	}
 }
