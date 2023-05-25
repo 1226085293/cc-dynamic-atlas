@@ -66,6 +66,10 @@ export class DynamicAtlasManager extends cc.System {
 		return this._atlases.length;
 	}
 
+	get atlases() {
+		return this._atlases;
+	}
+
 	/**
 	 * @en
 	 * Whether to enable textureBleeding.

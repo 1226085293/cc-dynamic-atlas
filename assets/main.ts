@@ -26,5 +26,14 @@ export class main extends Component {
 					// v.updateRenderer();
 				}
 			});
+
+		// 展示合图
+		{
+			let texture = projectDynamicAtlasManager.atlases[0].texture;
+			let sprite_frame = new cc.SpriteFrame();
+
+			sprite_frame.texture = texture;
+			this.nodes.merge_preview.getComponent(cc.Sprite).spriteFrame = sprite_frame;
+		}
 	}
 }

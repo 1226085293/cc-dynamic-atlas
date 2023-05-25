@@ -20,6 +20,10 @@ export class Atlas {
 	private _innerSpriteFrames: cc.SpriteFrame[];
 	private _count: number;
 
+	get texture() {
+		return this._texture;
+	}
+
 	constructor(width, height) {
 		const texture = new DynamicAtlasTexture();
 		texture.initWithSize(width, height);
