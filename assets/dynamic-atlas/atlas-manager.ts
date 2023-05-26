@@ -142,9 +142,9 @@ export class DynamicAtlasManager extends cc.System {
 	 * @method insertSpriteFrame
 	 * @param spriteFrame  the sprite frame that will be inserted in the atlas.
 	 */
-	public insertSpriteFrame(spriteFrame) {
+	public insertSpriteFrame(spriteFrame: cc.SpriteFrame) {
 		if (EDITOR && !cc["GAME_VIEW"]) return null;
-		if (!this._enabled || this._atlasIndex === this._maxAtlasCount || !spriteFrame || spriteFrame._original) return null;
+		if (!this._enabled || this._atlasIndex === this._maxAtlasCount || !spriteFrame || spriteFrame["_original"]) return null;
 
 		if (!spriteFrame.packable) return null;
 
@@ -243,9 +243,15 @@ export class DynamicAtlasManager extends cc.System {
 	public packToDynamicAtlas(comp: cc.UIRenderer, frame: any) {
 		if ((EDITOR && !cc["GAME_VIEW"]) || !this._enabled) return;
 
-		if (frame && !frame._original && frame.packable && frame.texture && frame.texture.width > 0 && frame.texture.height > 0) {
+		let texture = frame.texture as cc.Texture2D;
+		if (!texture?.image?.data) {
+			console.warn("无图片数据", frame.name);
+			return;
+		}
+
+		if (frame && !frame.original && frame.packable && frame.texture && frame.texture.width > 0 && frame.texture.height > 0) {
 			// label 处理（需添加判断是否能合图）
-			if (comp instanceof cc.Label) {
+			if (comp instanceof cc.Label && comp.cacheMode === cc.CacheMode.BITMAP) {
 				let texture = frame.texture as cc.Texture2D;
 				let rect = cc.rect();
 

@@ -250,7 +250,7 @@ export class DynamicAtlasTexture extends cc.Texture2D {
 	 */
 	public drawTextureAt(image: cc.ImageAsset, x: number, y: number) {
 		const gfxTexture = this.getGFXTexture();
-		if (!image || !gfxTexture) {
+		if (!image?.data || !gfxTexture) {
 			return;
 		}
 
@@ -265,6 +265,11 @@ export class DynamicAtlasTexture extends cc.Texture2D {
 		region.texOffset.y = y;
 		region.texExtent.width = (image as any)._nativeData?.width ?? (image as any)._width;
 		region.texExtent.height = (image as any)._nativeData?.height ?? (image as any)._height;
-		gfxDevice.copyTexImagesToTexture([image.data as HTMLCanvasElement], gfxTexture, [region]);
+
+		if (ArrayBuffer.isView(image.data)) {
+			gfxDevice.copyBuffersToTexture([image.data], gfxTexture, [region]);
+		} else {
+			gfxDevice.copyTexImagesToTexture([image.data as TexImageSource], gfxTexture, [region]);
+		}
 	}
 }
