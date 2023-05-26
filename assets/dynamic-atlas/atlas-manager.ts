@@ -14,8 +14,6 @@ export class DynamicAtlasManager extends cc.System {
 	private _textureBleeding = true;
 
 	private _enabled = false;
-	/** 当前更新 label 的 SpriteFrame */
-	currentUpdatedLabelSpriteFrame: cc.SpriteFrame;
 
 	/**
 	 * @en
@@ -262,7 +260,6 @@ export class DynamicAtlasManager extends cc.System {
 
 					// 重新合图
 					projectDynamicAtlasManager.deleteAtlasTexture(texture);
-					projectDynamicAtlasManager.currentUpdatedLabelSpriteFrame = frame;
 					packedFrame = projectDynamicAtlasManager.insertSpriteFrame(frame);
 
 					// 保存原始数据
