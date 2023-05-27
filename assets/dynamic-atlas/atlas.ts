@@ -200,15 +200,11 @@ export class DynamicAtlasTexture extends cc.Texture2D {
 	info: any;
 	spriteFrame: any;
 
-	// label 会用
-	uploadData(source: HTMLCanvasElement | HTMLImageElement | ArrayBufferView | ImageBitmap, level?: number, arrayIndex?: number): void {
-		// super.uploadData(source, level, arrayIndex);
-
-		// projectDynamicAtlasManager.deleteAtlasTexture(this.info.texture);
-		// projectDynamicAtlasManager.insertSpriteFrame(projectDynamicAtlasManager.currentUpdatedLabelSpriteFrame);
-		debugger;
-		return;
-	}
+	// // label 会用
+	// uploadData(source: HTMLCanvasElement | HTMLImageElement | ArrayBufferView | ImageBitmap, level?: number, arrayIndex?: number): void {
+	// 	super.uploadData(source, level, arrayIndex);
+	// 	return;
+	// }
 
 	reset(info: cc.__private._cocos_core_assets_texture_2d__ITexture2DCreateInfo, private_b_ = false): void {
 		if (private_b_) {

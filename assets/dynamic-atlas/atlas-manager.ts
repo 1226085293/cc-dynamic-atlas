@@ -247,48 +247,71 @@ export class DynamicAtlasManager extends cc.System {
 			return;
 		}
 
+		if (comp instanceof cc.Label && comp.cacheMode !== cc.CacheMode.BITMAP) {
+			return;
+		}
+
 		if (frame && !frame.original && frame.packable && frame.texture && frame.texture.width > 0 && frame.texture.height > 0) {
 			// label 处理（需添加判断是否能合图）
 			if (comp instanceof cc.Label && comp.cacheMode === cc.CacheMode.BITMAP) {
 				let texture = frame.texture as cc.Texture2D;
-				let rect = cc.rect();
 
-				texture["__oldUploadData"] = texture.uploadData;
-				texture.uploadData = function (...args_as: any[]) {
-					// 更新渲染数据
-					texture["__oldUploadData"].call(this, ...args_as);
+				// 重载 uploadData
+				if (!texture["__oldUploadData"]) {
+					let rect = cc.rect();
 
-					// 重新合图
-					projectDynamicAtlasManager.deleteAtlasTexture(texture);
-					packedFrame = projectDynamicAtlasManager.insertSpriteFrame(frame);
+					texture["__oldUploadData"] = texture.uploadData;
+					texture.uploadData = function (...args_as: any[]) {
+						// 更新渲染数据
+						texture["__oldUploadData"].call(this, ...args_as);
 
-					// 保存原始数据
-					frame._original = {
-						_texture: frame._texture,
-						_x: frame._rect.x,
-						_y: frame._rect.y,
+						// 重新合图
+						// projectDynamicAtlasManager.deleteAtlasTexture(texture);
+						let packedFrame = projectDynamicAtlasManager.insertSpriteFrame(frame);
+
+						// 保存原始数据
+						frame._original = {
+							_texture: frame._texture,
+							_x: frame._rect.x,
+							_y: frame._rect.y,
+						};
+
+						// 赋值合图
+						frame._texture = packedFrame.texture;
+						// 重置包围盒
+						frame._rect.set(packedFrame.x, packedFrame.y, args_as[0].width, args_as[0].height);
+
+						// 防止 ttfUtils._uploadTexture 中还原
+						rect.set(frame.rect);
+						let oldCalculateUV = frame._calculateUV;
+						frame._calculateUV = function (...args_as: any[]) {
+							frame._rect.set(rect);
+							oldCalculateUV.call(this, ...args_as);
+							frame._calculateUV = oldCalculateUV;
+						};
 					};
+				}
 
-					// 赋值合图
-					frame._texture = packedFrame.texture;
-					// 重置包围盒
-					frame._rect.set(packedFrame.x, packedFrame.y, args_as[0].width, args_as[0].height);
+				// 重载 getId
+				if (!texture["__oldGetId"]) {
+					texture["__oldGetId"] = texture.getId;
 
-					// 防止 ttfUtils._uploadTexture 中还原
-					rect.set(frame.rect);
-					let oldCalculateUV = frame._calculateUV;
-					frame._calculateUV = function (...args_as: any[]) {
-						frame._rect.set(rect);
-						oldCalculateUV.call(this, ...args_as);
-						frame._calculateUV = oldCalculateUV;
+					texture.getId = function (): string {
+						return comp.string;
 					};
-				};
+				}
 			}
 
-			let packedFrame = this.insertSpriteFrame(frame);
-			if (packedFrame) {
-				// 设置动态合图
-				frame._setDynamicAtlasFrame(packedFrame);
+			if (!(comp instanceof cc.Label && comp.node.name !== "RICHTEXT_CHILD")) {
+				let packedFrame = this.insertSpriteFrame(frame);
+				if (packedFrame) {
+					// 设置动态合图
+					frame._setDynamicAtlasFrame(packedFrame);
+
+					if (comp.node.name === "RICHTEXT_CHILD" && comp instanceof cc.Label) {
+						comp.renderData.vertDirty = true;
+					}
+				}
 			}
 		}
 	}
