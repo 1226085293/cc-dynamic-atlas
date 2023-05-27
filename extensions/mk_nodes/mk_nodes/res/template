@@ -1,9 +1,0 @@
-import * as cc from "cc";
-const { ccclass, property } = cc._decorator;
-
-@ccclass("类名")
-class 类名 {
-	// 属性
-}
-
-export default 类名;
